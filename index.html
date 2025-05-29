@@ -480,6 +480,9 @@
             transition: background 0.3s ease;
             margin-top: auto;
             font-size: 0.95rem;
+            cursor: pointer;
+            border: none;
+            font-family: 'Poppins', sans-serif;
         }
 
         .download-btn:hover {
@@ -605,24 +608,6 @@
             }
         }
 
-        /* Theme Indicator */
-        .theme-indicator {
-            position: fixed;
-            top: 70px;
-            right: 15px;
-            background: var(--card-bg);
-            padding: 8px 12px;
-            border-radius: 25px;
-            box-shadow: 0 3px 10px var(--shadow);
-            border: 1px solid var(--border);
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            z-index: 10;
-            animation: fadeIn 1s ease;
-        }
-
         /* Responsive Design */
         @media (min-width: 480px) {
             body {
@@ -674,11 +659,6 @@
             .preview-title, .steps-title {
                 font-size: 1.5rem;
             }
-            
-            .theme-indicator {
-                top: 20px;
-                right: 20px;
-            }
         }
 
         @media (min-width: 768px) {
@@ -719,13 +699,6 @@
             .preview-title, .steps-title {
                 font-size: 1.7rem;
             }
-            
-            .theme-indicator {
-                top: 25px;
-                right: 25px;
-                font-size: 0.85rem;
-                padding: 10px 15px;
-            }
         }
 
         @media (min-width: 992px) {
@@ -748,11 +721,6 @@
     </style>
 </head>
 <body>
-    <div class="theme-indicator">
-        <i class="fas fa-sun"></i>
-        <span>Light Mode</span>
-    </div>
-    
     <div class="container">
         <div class="top-nav">
             <div class="logo-container">
@@ -842,9 +810,6 @@
         // Theme management with localStorage
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = themeToggle.querySelector('i');
-        const themeIndicator = document.querySelector('.theme-indicator');
-        const themeIndicatorIcon = themeIndicator.querySelector('i');
-        const themeIndicatorText = themeIndicator.querySelector('span');
         
         // Set theme based on preference
         function setTheme(isDark) {
@@ -852,17 +817,11 @@
                 document.body.classList.add('dark-theme');
                 themeIcon.classList.remove('fa-moon');
                 themeIcon.classList.add('fa-sun');
-                themeIndicatorIcon.classList.remove('fa-sun');
-                themeIndicatorIcon.classList.add('fa-moon');
-                themeIndicatorText.textContent = 'Dark Mode';
                 localStorage.setItem('theme', 'dark');
             } else {
                 document.body.classList.remove('dark-theme');
                 themeIcon.classList.remove('fa-sun');
                 themeIcon.classList.add('fa-moon');
-                themeIndicatorIcon.classList.remove('fa-moon');
-                themeIndicatorIcon.classList.add('fa-sun');
-                themeIndicatorText.textContent = 'Light Mode';
                 localStorage.setItem('theme', 'light');
             }
         }
@@ -939,9 +898,9 @@
                             <span class="quality-tag">${quality.name} Quality</span>
                         </div>
                         <div class="thumbnail-dimensions">${quality.width}×${quality.height}</div>
-                        <a href="${url}" download="youtube-thumbnail-${quality.id}.jpg" class="download-btn">
+                        <button class="download-btn" data-url="${url}" data-filename="youtube-thumbnail-${quality.id}.jpg">
                             <i class="fas fa-download"></i> Download
-                        </a>
+                        </button>
                     </div>
                 </div>
             `;
@@ -1039,6 +998,26 @@
             }
         });
         
+        // Download thumbnail
+        function downloadThumbnail(url, filename) {
+            // Create a temporary anchor element
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            link.target = '_blank';
+            
+            // Append to the document
+            document.body.appendChild(link);
+            
+            // Trigger the click event
+            link.click();
+            
+            // Clean up
+            setTimeout(() => {
+                document.body.removeChild(link);
+            }, 100);
+        }
+        
         // Event listeners
         getThumbnailBtn.addEventListener('click', processUrl);
         
@@ -1060,6 +1039,16 @@
         // Focus input on page load
         window.addEventListener('load', () => {
             videoUrlInput.focus();
+        });
+        
+        // Handle download button clicks using event delegation
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('download-btn') || e.target.closest('.download-btn')) {
+                const btn = e.target.closest('.download-btn');
+                const url = btn.getAttribute('data-url');
+                const filename = btn.getAttribute('data-filename');
+                downloadThumbnail(url, filename);
+            }
         });
     </script>
 </body>
