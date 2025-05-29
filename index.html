@@ -588,6 +588,24 @@
             }
         }
 
+        /* Theme Indicator */
+        .theme-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            padding: 10px 15px;
+            border-radius: 30px;
+            box-shadow: 0 5px 15px var(--shadow);
+            border: 1px solid var(--border);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 10;
+            animation: fadeIn 1s ease;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             h1 {
@@ -625,6 +643,13 @@
             
             .thumbnails-grid {
                 grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            }
+            
+            .theme-indicator {
+                top: 80px;
+                right: 10px;
+                font-size: 0.8rem;
+                padding: 8px 12px;
             }
         }
 
@@ -687,10 +712,22 @@
             .preview-title, .steps-title {
                 font-size: 1.5rem;
             }
+            
+            .theme-indicator {
+                top: 70px;
+                right: 5px;
+                font-size: 0.75rem;
+                padding: 6px 10px;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="theme-indicator">
+        <i class="fas fa-sun"></i>
+        <span>Light Mode</span>
+    </div>
+    
     <div class="container">
         <div class="top-nav">
             <div class="logo-container">
@@ -777,10 +814,12 @@
         // Set current year in footer
         document.getElementById('currentYear').textContent = new Date().getFullYear();
 
-        // Theme management with localStorage and system preference
+        // Theme management with localStorage
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = themeToggle.querySelector('i');
-        const savedTheme = localStorage.getItem('theme');
+        const themeIndicator = document.querySelector('.theme-indicator');
+        const themeIndicatorIcon = themeIndicator.querySelector('i');
+        const themeIndicatorText = themeIndicator.querySelector('span');
         
         // Set theme based on preference
         function setTheme(isDark) {
@@ -788,27 +827,39 @@
                 document.body.classList.add('dark-theme');
                 themeIcon.classList.remove('fa-moon');
                 themeIcon.classList.add('fa-sun');
+                themeIndicatorIcon.classList.remove('fa-sun');
+                themeIndicatorIcon.classList.add('fa-moon');
+                themeIndicatorText.textContent = 'Dark Mode';
                 localStorage.setItem('theme', 'dark');
             } else {
                 document.body.classList.remove('dark-theme');
                 themeIcon.classList.remove('fa-sun');
                 themeIcon.classList.add('fa-moon');
+                themeIndicatorIcon.classList.remove('fa-moon');
+                themeIndicatorIcon.classList.add('fa-sun');
+                themeIndicatorText.textContent = 'Light Mode';
                 localStorage.setItem('theme', 'light');
             }
         }
         
-        // Initialize theme
-        if (savedTheme) {
-            setTheme(savedTheme === 'dark');
-        } else {
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            setTheme(prefersDark);
-        }
+        // Initialize theme to LIGHT MODE by default
+        const savedTheme = localStorage.getItem('theme');
+        setTheme(savedTheme === 'dark');
         
         // Toggle theme on button click
         themeToggle.addEventListener('click', () => {
             const isDark = document.body.classList.contains('dark-theme');
             setTheme(!isDark);
+            
+            // Show theme change notification
+            const toast = document.createElement('div');
+            toast.className = `toast`;
+            toast.innerHTML = `<i class="fas fa-adjust"></i> Switched to ${!isDark ? 'Dark' : 'Light'} Mode`;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 2000);
         });
         
         // Get elements
