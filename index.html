@@ -998,24 +998,41 @@
             }
         });
         
-        // Download thumbnail
-        function downloadThumbnail(url, filename) {
-            // Create a temporary anchor element
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = filename;
-            link.target = '_blank';
-            
-            // Append to the document
-            document.body.appendChild(link);
-            
-            // Trigger the click event
-            link.click();
-            
-            // Clean up
-            setTimeout(() => {
-                document.body.removeChild(link);
-            }, 100);
+        // Download thumbnail using fetch and blob method
+        async function downloadThumbnail(url, filename) {
+            try {
+                // Show loading for this download
+                const toast = document.createElement('div');
+                toast.className = `toast`;
+                toast.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Preparing download...`;
+                document.body.appendChild(toast);
+                
+                // Fetch the image
+                const response = await fetch(url);
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                
+                // Create a temporary anchor element
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = filename;
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                
+                // Trigger the download
+                link.click();
+                
+                // Clean up
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(blobUrl);
+                    toast.remove();
+                    showToast('Thumbnail downloaded successfully!');
+                }, 100);
+            } catch (error) {
+                console.error('Download failed:', error);
+                showToast('Failed to download thumbnail. Please try again.', true);
+            }
         }
         
         // Event listeners
