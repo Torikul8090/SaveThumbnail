@@ -5,15 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SaveYTThumbnail.com - YouTube Thumbnail Downloader</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             /* Light theme (default) */
             --primary: #4361ee;
+            --primary-light: #6c8aff;
             --secondary: #3f37c9;
             --accent: #f72585;
+            --accent-light: #ff66a3;
+            --success: #4caf50;
+            --error: #f44336;
             --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #e2e8f0 100%);
-            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-bg: rgba(255, 255, 255, 0.92);
             --text-primary: #1e293b;
             --text-secondary: #475569;
             --shadow: rgba(100, 116, 139, 0.15);
@@ -21,15 +25,21 @@
             --border: rgba(203, 213, 225, 0.5);
             --divider: #e2e8f0;
             --toast-bg: #4caf50;
+            --loader: #4361ee;
+            --logo-color: #4361ee;
         }
 
         .dark-theme {
             /* Dark theme */
             --primary: #ff6b6b;
+            --primary-light: #ff9e7d;
             --secondary: #ff9e7d;
             --accent: #ffd166;
+            --accent-light: #ffdf8f;
+            --success: #66bb6a;
+            --error: #ef5350;
             --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            --card-bg: rgba(30, 41, 59, 0.75);
+            --card-bg: rgba(30, 41, 59, 0.85);
             --text-primary: #f1f5f9;
             --text-secondary: #cbd5e1;
             --shadow: rgba(0, 0, 0, 0.25);
@@ -37,13 +47,15 @@
             --border: rgba(71, 85, 105, 0.5);
             --divider: #334155;
             --toast-bg: #2e7d32;
+            --loader: #ff6b6b;
+            --logo-color: #ff6b6b;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: background-color 0.5s ease, color 0.3s ease;
+            transition: background-color 0.5s ease, color 0.3s ease, transform 0.3s ease;
         }
 
         body {
@@ -80,64 +92,80 @@
             z-index: 1;
         }
 
-        /* Header */
-        header {
-            text-align: center;
-            padding: 40px 0 20px;
+        /* Top Navigation */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0 30px;
+            margin-bottom: 10px;
             animation: fadeInDown 1s ease;
         }
 
-        .logo {
+        .logo-container {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
+            gap: 12px;
         }
 
         .logo-icon {
-            width: 70px;
-            height: 70px;
+            width: 48px;
+            height: 48px;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 20px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 2rem;
-            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+            font-size: 1.6rem;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.2);
         }
 
-        h1 {
+        .logo-text {
             font-family: 'Montserrat', sans-serif;
-            font-size: 2.8rem;
-            font-weight: 800;
-            color: var(--text-primary);
-            margin-bottom: 10px;
-        }
-
-        .domain {
-            font-size: 1.8rem;
             font-weight: 700;
+            font-size: 1.6rem;
             background: linear-gradient(135deg, var(--primary), var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 0 0 25px;
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            line-height: 1.2;
         }
 
         .tagline {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             color: var(--text-secondary);
             max-width: 600px;
-            margin: 0 auto 30px;
+            margin: 0 auto 25px;
+            line-height: 1.5;
         }
 
         .divider {
             height: 1px;
             background: var(--divider);
             width: 80%;
-            margin: 20px auto 30px;
+            margin: 0 auto 30px;
         }
 
         /* Input Section */
@@ -145,29 +173,30 @@
             background: var(--card-bg);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
+            border-radius: 18px;
+            padding: 25px;
             box-shadow: 0 10px 30px var(--shadow);
             border: 1px solid var(--border);
             max-width: 800px;
-            margin: 0 auto 40px;
+            margin: 0 auto 35px;
             animation: fadeInUp 0.8s ease;
         }
 
         .input-group {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 18px;
         }
 
         .input-wrapper {
             position: relative;
             display: flex;
+            align-items: center;
         }
 
         .url-input {
-            padding: 18px 50px 18px 25px;
-            border-radius: 15px;
+            padding: 16px 50px 16px 20px;
+            border-radius: 14px;
             border: none;
             background: var(--input-bg);
             color: var(--text-primary);
@@ -176,6 +205,7 @@
             border: 1px solid var(--border);
             transition: all 0.3s ease;
             width: 100%;
+            height: 55px;
         }
 
         .url-input:focus {
@@ -186,20 +216,22 @@
 
         .url-input::placeholder {
             color: var(--text-secondary);
+            opacity: 0.7;
         }
 
         .paste-btn {
             position: absolute;
             right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
             background: transparent;
             border: none;
             color: var(--text-secondary);
             cursor: pointer;
             font-size: 1.2rem;
-            padding: 5px;
+            padding: 8px;
             transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .paste-btn:hover {
@@ -207,8 +239,8 @@
         }
 
         .btn {
-            padding: 18px 35px;
-            border-radius: 15px;
+            padding: 16px 30px;
+            border-radius: 14px;
             border: none;
             background: var(--accent);
             color: white;
@@ -225,16 +257,21 @@
 
         .btn:hover {
             transform: translateY(-3px);
+            background: var(--accent-light);
             box-shadow: 0 8px 20px rgba(247, 37, 133, 0.4);
         }
 
+        .btn:disabled {
+            background: var(--text-secondary);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
         .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
             background: var(--card-bg);
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -242,34 +279,33 @@
             cursor: pointer;
             box-shadow: 0 5px 15px var(--shadow);
             border: 1px solid var(--border);
-            z-index: 10;
         }
 
         /* Steps Section */
         .steps-section {
             max-width: 1000px;
-            margin: 0 auto 50px;
+            margin: 0 auto 40px;
         }
 
         .steps-title {
             text-align: center;
-            font-size: 1.8rem;
-            margin-bottom: 30px;
+            font-size: 1.7rem;
+            margin-bottom: 25px;
             font-weight: 700;
             color: var(--text-primary);
         }
 
         .steps-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px;
         }
 
         .step-card {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
+            border-radius: 18px;
+            padding: 25px;
             box-shadow: 0 10px 30px var(--shadow);
             border: 1px solid var(--border);
             transition: transform 0.3s ease;
@@ -279,11 +315,12 @@
 
         .step-card:hover {
             transform: translateY(-8px);
+            box-shadow: 0 15px 35px var(--shadow);
         }
 
         .step-number {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             background: var(--accent);
             color: white;
             border-radius: 50%;
@@ -291,74 +328,122 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 1.2rem;
-            margin-bottom: 20px;
+            font-size: 1.1rem;
+            margin-bottom: 18px;
         }
 
         .step-title {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             color: var(--text-primary);
         }
 
         .step-description {
             color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
         }
 
         /* Preview Section */
         .preview-section {
             display: none;
             max-width: 1200px;
-            margin: 0 auto 50px;
+            margin: 0 auto 40px;
             animation: fadeIn 0.8s ease;
         }
 
         .preview-title {
             text-align: center;
-            font-size: 1.8rem;
-            margin-bottom: 30px;
+            font-size: 1.7rem;
+            margin-bottom: 25px;
             font-weight: 700;
             color: var(--text-primary);
         }
 
+        .no-thumbnail {
+            text-align: center;
+            padding: 30px;
+            background: var(--card-bg);
+            border-radius: 18px;
+            box-shadow: 0 10px 30px var(--shadow);
+            border: 1px solid var(--border);
+            margin-top: 20px;
+        }
+
+        .no-thumbnail i {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .no-thumbnail h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .no-thumbnail p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
         .thumbnails-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 22px;
         }
 
         .thumbnail-card {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
-            border-radius: 20px;
+            border-radius: 18px;
             overflow: hidden;
             box-shadow: 0 10px 30px var(--shadow);
             border: 1px solid var(--border);
             transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
         }
 
         .thumbnail-card:hover {
             transform: translateY(-8px);
+            box-shadow: 0 15px 35px var(--shadow);
         }
 
-        .thumbnail-img {
+        .thumbnail-img-wrapper {
+            position: relative;
             width: 100%;
-            height: 180px;
-            object-fit: cover;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            background: rgba(0,0,0,0.05);
+            overflow: hidden;
             border-bottom: 1px solid var(--border);
         }
 
+        .thumbnail-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
         .thumbnail-info {
-            padding: 20px;
+            padding: 18px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .thumbnail-quality {
             font-weight: 700;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 8px;
+            font-size: 1.05rem;
         }
 
         .quality-tag {
@@ -366,12 +451,21 @@
             color: var(--accent);
             padding: 4px 10px;
             border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .thumbnail-dimensions {
             font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
         }
 
         .download-btn {
-            display: block;
-            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
             padding: 12px;
             background: var(--accent);
             color: white;
@@ -380,20 +474,20 @@
             text-decoration: none;
             font-weight: 600;
             transition: background 0.3s ease;
-            margin-top: 15px;
+            margin-top: auto;
         }
 
         .download-btn:hover {
-            background: rgba(247, 37, 133, 0.9);
+            background: var(--accent-light);
         }
 
         /* Footer */
         footer {
             text-align: center;
             margin-top: auto;
-            padding: 30px 0;
+            padding: 25px 0;
             color: var(--text-secondary);
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             border-top: 1px solid var(--divider);
         }
 
@@ -410,7 +504,7 @@
             transform: translateX(-50%);
             background: var(--toast-bg);
             color: white;
-            padding: 15px 30px;
+            padding: 14px 28px;
             border-radius: 30px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             z-index: 1000;
@@ -418,8 +512,25 @@
             align-items: center;
             gap: 10px;
             animation: slideUp 0.3s ease, fadeOut 0.5s ease 2.5s forwards;
+            font-weight: 500;
         }
 
+        .toast.error {
+            background: var(--error);
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            display: none;
+        }
+
+        /* Animations */
         @keyframes slideUp {
             from {
                 bottom: -50px;
@@ -440,7 +551,6 @@
             }
         }
 
-        /* Animations */
         @keyframes fadeInDown {
             from {
                 opacity: 0;
@@ -472,22 +582,28 @@
             }
         }
 
-        /* Responsive */
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
             h1 {
-                font-size: 2.2rem;
+                font-size: 2.0rem;
             }
             
-            .domain {
-                font-size: 1.5rem;
+            .logo-text {
+                font-size: 1.4rem;
             }
             
             .tagline {
-                font-size: 1rem;
+                font-size: 1.05rem;
             }
             
             .input-card {
-                padding: 25px;
+                padding: 22px;
             }
             
             .steps-grid {
@@ -495,60 +611,105 @@
             }
             
             .step-card {
-                padding: 25px;
+                padding: 22px;
+            }
+            
+            .btn {
+                padding: 15px;
+                font-size: 1.05rem;
+            }
+            
+            .preview-title, .steps-title {
+                font-size: 1.6rem;
+            }
+            
+            .thumbnails-grid {
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             }
         }
 
         @media (max-width: 480px) {
-            h1 {
-                font-size: 1.8rem;
+            body {
+                padding: 15px;
             }
             
-            .domain {
-                font-size: 1.3rem;
+            h1 {
+                font-size: 1.7rem;
+            }
+            
+            .logo-text {
+                font-size: 1.25rem;
             }
             
             .logo-icon {
-                width: 60px;
-                height: 60px;
-                font-size: 1.5rem;
+                width: 42px;
+                height: 42px;
+                font-size: 1.4rem;
             }
             
-            .btn {
-                padding: 16px;
+            .tagline {
                 font-size: 1rem;
+                padding: 0 10px;
+            }
+            
+            .divider {
+                width: 90%;
             }
             
             .theme-toggle {
-                top: 15px;
-                right: 15px;
-                width: 40px;
-                height: 40px;
+                width: 42px;
+                height: 42px;
+                font-size: 0.9rem;
+            }
+            
+            .url-input {
+                padding: 14px 45px 14px 16px;
+                font-size: 0.95rem;
+                height: 52px;
+            }
+            
+            .paste-btn {
+                right: 12px;
+                font-size: 1.1rem;
             }
             
             .toast {
                 width: 90%;
                 padding: 12px 20px;
                 font-size: 0.9rem;
+                text-align: center;
+            }
+            
+            .step-title {
+                font-size: 1.2rem;
+            }
+            
+            .preview-title, .steps-title {
+                font-size: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="theme-toggle" id="themeToggle">
-        <i class="fas fa-moon"></i>
-    </div>
-
     <div class="container">
-        <header>
-            <div class="logo">
+        <div class="top-nav">
+            <div class="logo-container">
                 <div class="logo-icon">
                     <i class="fas fa-image"></i>
                 </div>
-                <h1>YouTube Thumbnail Downloader</h1>
-                <div class="domain">SaveYTThumbnail.com</div>
+                <div class="logo-text">SaveYTThumbnail.com</div>
             </div>
-            <p class="tagline">Download high-quality YouTube thumbnails in seconds. Simply paste your video URL below!</p>
+            
+            <div class="nav-actions">
+                <div class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </div>
+            </div>
+        </div>
+
+        <header>
+            <h1>YouTube Thumbnail Downloader</h1>
+            <p class="tagline">Download high-quality thumbnails from any YouTube video instantly</p>
         </header>
 
         <div class="divider"></div>
@@ -557,13 +718,15 @@
             <div class="input-card">
                 <div class="input-group">
                     <div class="input-wrapper">
-                        <input type="text" class="url-input" id="videoUrl" placeholder="Paste YouTube URL here...">
+                        <input type="text" class="url-input" id="videoUrl" placeholder="Paste YouTube URL here..." autofocus>
                         <button class="paste-btn" id="pasteBtn" title="Paste from clipboard">
                             <i class="fas fa-paste"></i>
                         </button>
                     </div>
                     <button class="btn" id="getThumbnail">
-                        <i class="fas fa-download"></i> Get Thumbnails
+                        <i class="fas fa-download"></i> 
+                        <span>Get Thumbnails</span>
+                        <div class="spinner" id="spinner"></div>
                     </button>
                 </div>
             </div>
@@ -584,7 +747,7 @@
                     <div class="step-card">
                         <div class="step-number">3</div>
                         <h3 class="step-title">Download</h3>
-                        <p class="step-description">Choose your preferred quality and click the download button.</p>
+                        <p class="step-description">Choose your preferred quality and click the download button to save the thumbnail.</p>
                     </div>
                 </div>
             </section>
@@ -594,37 +757,58 @@
                 <div class="thumbnails-grid" id="thumbnailsGrid">
                     <!-- Thumbnails will be dynamically inserted here -->
                 </div>
+                <div class="no-thumbnail" id="noThumbnail" style="display: none;">
+                    <i class="fas fa-image"></i>
+                    <h3>No Thumbnails Found</h3>
+                    <p>We couldn't find any thumbnails for this video. Please check the URL and try again.</p>
+                    <button class="btn" onclick="document.getElementById('videoUrl').focus()">
+                        <i class="fas fa-redo"></i> Try Again
+                    </button>
+                </div>
             </section>
         </main>
 
         <footer>
-            <p>© 2023 SaveYTThumbnail.com - A free YouTube thumbnail downloader | Designed with <span class="footer-heart">❤️</span></p>
+            <p>© <span id="currentYear"></span> SaveYTThumbnail.com - Free YouTube Thumbnail Downloader | Made with <span class="footer-heart">❤️</span></p>
         </footer>
     </div>
 
     <script>
-        // Theme management
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Theme management with localStorage and system preference
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = themeToggle.querySelector('i');
+        const savedTheme = localStorage.getItem('theme');
         
-        // Set initial theme based on time
-        const hour = new Date().getHours();
-        if (hour < 6 || hour >= 18) {
-            document.body.classList.add('dark-theme');
-            themeIcon.classList.remove('fa-moon');
-            themeIcon.classList.add('fa-sun');
+        // Set theme based on preference
+        function setTheme(isDark) {
+            if (isDark) {
+                document.body.classList.add('dark-theme');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-theme');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        
+        // Initialize theme
+        if (savedTheme) {
+            setTheme(savedTheme === 'dark');
+        } else {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            setTheme(prefersDark);
         }
         
         // Toggle theme on button click
         themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-theme');
-            if (document.body.classList.contains('dark-theme')) {
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-            } else {
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-            }
+            const isDark = document.body.classList.contains('dark-theme');
+            setTheme(!isDark);
         });
         
         // Get elements
@@ -633,37 +817,52 @@
         const pasteBtn = document.getElementById('pasteBtn');
         const previewSection = document.getElementById('previewSection');
         const thumbnailsGrid = document.getElementById('thumbnailsGrid');
+        const noThumbnail = document.getElementById('noThumbnail');
+        const spinner = document.getElementById('spinner');
         
-        // YouTube thumbnail qualities
+        // YouTube thumbnail qualities with accurate resolutions
         const qualities = [
-            { id: 'maxres', name: 'Maximum Resolution', width: 1280, height: 720 },
-            { id: 'hq', name: 'High Quality', width: 480, height: 360 },
-            { id: 'mq', name: 'Medium Quality', width: 320, height: 180 },
-            { id: 'default', name: 'Standard', width: 120, height: 90 }
+            { id: 'maxresdefault', name: 'Maximum', width: 1280, height: 720 },
+            { id: 'sddefault', name: 'High', width: 640, height: 480 },
+            { id: 'hqdefault', name: 'Medium', width: 480, height: 360 },
+            { id: 'mqdefault', name: 'Standard', width: 320, height: 180 },
+            { id: 'default', name: 'Low', width: 120, height: 90 }
         ];
         
         // Get YouTube video ID from URL
         function getYouTubeId(url) {
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/)([^#&?]*).*/;
             const match = url.match(regExp);
             return (match && match[2].length === 11) ? match[2] : null;
         }
         
         // Generate thumbnail URL
         function generateThumbnailUrl(videoId, quality) {
-            return `https://img.youtube.com/vi/${videoId}/${quality}default.jpg`;
+            return `https://img.youtube.com/vi/${videoId}/${quality.id}.jpg`;
+        }
+        
+        // Check if an image exists
+        function checkImageExists(url) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(false);
+                img.src = url;
+            });
         }
         
         // Create thumbnail card
         function createThumbnailCard(quality, url) {
             return `
                 <div class="thumbnail-card">
-                    <img src="${url}" alt="${quality.name} thumbnail" class="thumbnail-img">
+                    <div class="thumbnail-img-wrapper">
+                        <img src="${url}" alt="${quality.name} thumbnail" class="thumbnail-img">
+                    </div>
                     <div class="thumbnail-info">
                         <div class="thumbnail-quality">
-                            <span class="quality-tag">${quality.name}</span>
-                            <span>${quality.width}×${quality.height}</span>
+                            <span class="quality-tag">${quality.name} Quality</span>
                         </div>
+                        <div class="thumbnail-dimensions">Resolution: ${quality.width}×${quality.height}</div>
                         <a href="${url}" download="youtube-thumbnail-${quality.id}.jpg" class="download-btn">
                             <i class="fas fa-download"></i> Download
                         </a>
@@ -673,10 +872,10 @@
         }
         
         // Show toast notification
-        function showToast(message) {
+        function showToast(message, isError = false) {
             const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            toast.className = `toast ${isError ? 'error' : ''}`;
+            toast.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i> ${message}`;
             document.body.appendChild(toast);
             
             setTimeout(() => {
@@ -684,46 +883,80 @@
             }, 3000);
         }
         
+        // Toggle loading state
+        function toggleLoading(isLoading) {
+            if (isLoading) {
+                spinner.style.display = 'block';
+                getThumbnailBtn.disabled = true;
+                getThumbnailBtn.querySelector('span').textContent = 'Processing...';
+            } else {
+                spinner.style.display = 'none';
+                getThumbnailBtn.disabled = false;
+                getThumbnailBtn.querySelector('span').textContent = 'Get Thumbnails';
+            }
+        }
+        
         // Process the URL
-        function processUrl() {
+        async function processUrl() {
             const url = videoUrlInput.value.trim();
             
             if (!url) {
-                showToast('Please enter a YouTube URL');
+                showToast('Please enter a YouTube URL', true);
                 return;
             }
             
             const videoId = getYouTubeId(url);
             if (!videoId) {
-                showToast('Invalid YouTube URL. Please try again.');
+                showToast('Invalid YouTube URL. Please try again.', true);
                 return;
             }
             
+            toggleLoading(true);
             thumbnailsGrid.innerHTML = '';
-            
-            qualities.forEach(quality => {
-                const thumbnailUrl = generateThumbnailUrl(videoId, quality.id);
-                const thumbnailCard = createThumbnailCard(quality, thumbnailUrl);
-                thumbnailsGrid.innerHTML += thumbnailCard;
-            });
-            
+            noThumbnail.style.display = 'none';
             previewSection.style.display = 'block';
             
-            // Scroll to preview section
-            previewSection.scrollIntoView({ behavior: 'smooth' });
+            try {
+                // Check which thumbnails actually exist
+                const availableThumbnails = [];
+                
+                for (const quality of qualities) {
+                    const thumbnailUrl = generateThumbnailUrl(videoId, quality);
+                    const exists = await checkImageExists(thumbnailUrl);
+                    
+                    if (exists) {
+                        availableThumbnails.push({ quality, url: thumbnailUrl });
+                    }
+                }
+                
+                if (availableThumbnails.length === 0) {
+                    noThumbnail.style.display = 'block';
+                    showToast('No thumbnails found for this video.', true);
+                } else {
+                    availableThumbnails.forEach(thumb => {
+                        thumbnailsGrid.innerHTML += createThumbnailCard(thumb.quality, thumb.url);
+                    });
+                    showToast(`${availableThumbnails.length} thumbnails loaded successfully!`);
+                }
+            } catch (error) {
+                console.error('Error processing thumbnails:', error);
+                noThumbnail.style.display = 'block';
+                showToast('An error occurred while processing thumbnails.', true);
+            } finally {
+                toggleLoading(false);
+                previewSection.scrollIntoView({ behavior: 'smooth' });
+            }
         }
         
-        // Paste from clipboard with improved UX
+        // Paste from clipboard
         pasteBtn.addEventListener('click', async () => {
             try {
-                // Try to read clipboard text
                 const text = await navigator.clipboard.readText();
                 if (text) {
                     videoUrlInput.value = text;
                     showToast('URL pasted successfully!');
                 }
             } catch (err) {
-                // Fallback method: Focus input and select content
                 videoUrlInput.focus();
                 videoUrlInput.select();
                 showToast('Please paste manually (Ctrl+V)');
@@ -739,14 +972,18 @@
             }
         });
         
-        // Improved paste experience
-        videoUrlInput.addEventListener('paste', (e) => {
-            const pastedText = e.clipboardData.getData('text');
-            if (pastedText) {
-                setTimeout(() => {
+        // Auto-paste detection
+        videoUrlInput.addEventListener('paste', () => {
+            setTimeout(() => {
+                if (videoUrlInput.value.trim()) {
                     showToast('URL pasted successfully!');
-                }, 100);
-            }
+                }
+            }, 100);
+        });
+        
+        // Focus input on page load
+        window.addEventListener('load', () => {
+            videoUrlInput.focus();
         });
     </script>
 </body>
