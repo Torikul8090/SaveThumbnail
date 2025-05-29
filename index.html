@@ -846,22 +846,49 @@
                 
                 const thumbnailItem = document.createElement('div');
                 thumbnailItem.className = 'thumbnail-item';
-                thumbnailItem.innerHTML = `
-                    <div class="thumbnail-loading">
-                        <div class="loader"></div>
-                    </div>
-                    <img src="${thumbUrl}" alt="YouTube Thumbnail" class="thumbnail-img" loading="lazy" data-quality="${thumb.id}">
-                    <div class="thumbnail-info">
-                        <div class="thumbnail-size">${thumb.size} (${thumb.quality})</div>
-                        <button class="download-btn" data-url="${thumbUrl}">
-                            <i class="fas fa-download"></i> Download
-                        </button>
-                    </div>
-                `;
+                
+                // Create loading div
+                const loadingDiv = document.createElement('div');
+                loadingDiv.className = 'thumbnail-loading';
+                const loader = document.createElement('div');
+                loader.className = 'loader';
+                loadingDiv.appendChild(loader);
+                
+                // Create image element
+                const img = document.createElement('img');
+                img.className = 'thumbnail-img';
+                img.alt = 'YouTube Thumbnail';
+                img.loading = 'lazy';
+                img.dataset.quality = thumb.id;
+                img.crossOrigin = 'Anonymous';  // Important for CORS handling
+                
+                // Create thumbnail info
+                const thumbnailInfo = document.createElement('div');
+                thumbnailInfo.className = 'thumbnail-info';
+                
+                const sizeDiv = document.createElement('div');
+                sizeDiv.className = 'thumbnail-size';
+                sizeDiv.textContent = `${thumb.size} (${thumb.quality})`;
+                
+                const downloadBtn = document.createElement('button');
+                downloadBtn.className = 'download-btn';
+                downloadBtn.dataset.url = thumbUrl;
+                downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download';
+                
+                thumbnailInfo.appendChild(sizeDiv);
+                thumbnailInfo.appendChild(downloadBtn);
+                
+                // Append all to thumbnailItem
+                thumbnailItem.appendChild(loadingDiv);
+                thumbnailItem.appendChild(img);
+                thumbnailItem.appendChild(thumbnailInfo);
+                
                 thumbnailsGrid.appendChild(thumbnailItem);
                 
+                // Set image source after setting crossOrigin
+                img.src = thumbUrl;
+                
                 // Check if image exists
-                const img = thumbnailItem.querySelector('img');
                 img.onerror = () => {
                     // Replace with not found message
                     thumbnailItem.innerHTML = `
@@ -875,12 +902,11 @@
                 };
                 
                 img.onload = () => {
-                    thumbnailItem.querySelector('.thumbnail-loading').style.display = 'none';
+                    loadingDiv.style.display = 'none';
                     
                     // Add download functionality
-                    const downloadBtn = thumbnailItem.querySelector('.download-btn');
                     downloadBtn.addEventListener('click', () => {
-                        downloadImage(img.src);
+                        downloadImage(img);
                     });
                     
                     validThumbnails++;
@@ -913,26 +939,50 @@
                     
                     // Only download if the button is visible (thumbnail available)
                     if (btn.offsetParent !== null) {
-                        const imgUrl = btn.getAttribute('data-url');
-                        downloadImage(imgUrl);
+                        btn.click();
                     }
                     
                     index++;
-                    setTimeout(downloadNext, 300);
+                    setTimeout(downloadNext, 1000); // Increased delay for better performance
                 }
             }
             
             downloadNext();
         }
         
-        function downloadImage(url) {
-            // Create a temporary link to trigger download
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `youtube-thumbnail-${Date.now()}.jpg`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+        // Fixed downloadImage function
+        function downloadImage(img) {
+            try {
+                // Create a canvas to handle CORS issues
+                const canvas = document.createElement('canvas');
+                canvas.width = img.naturalWidth;
+                canvas.height = img.naturalHeight;
+                
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                
+                // Convert canvas to blob and trigger download
+                canvas.toBlob(function(blob) {
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `youtube-thumbnail-${Date.now()}.jpg`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // Clean up
+                    URL.revokeObjectURL(url);
+                }, 'image/jpeg', 0.9);
+            } catch (error) {
+                // Fallback to direct download if canvas method fails
+                const fallbackLink = document.createElement('a');
+                fallbackLink.href = img.src;
+                fallbackLink.download = `youtube-thumbnail-${Date.now()}.jpg`;
+                document.body.appendChild(fallbackLink);
+                fallbackLink.click();
+                document.body.removeChild(fallbackLink);
+            }
         }
         
         // Helper function to extract YouTube video ID
