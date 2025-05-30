@@ -1,12 +1,13 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaveYTThumbnail.com - YouTube Thumbnail Downloader</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
-    <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SaveYTThumbnail.com - YouTube Thumbnail Downloader</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&amp;family=Montserrat:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<style>
         :root {
             /* Light theme (default) */
             --primary: #4361ee;
@@ -721,89 +722,96 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="top-nav">
-            <div class="logo-container">
-                <div class="logo-icon">
-                    <i class="fas fa-image"></i>
-                </div>
-                <div class="logo-text">SaveYTThumbnail</div>
-            </div>
-            
-            <div class="nav-actions">
-                <div class="theme-toggle" id="themeToggle">
-                    <i class="fas fa-moon"></i>
-                </div>
-            </div>
-        </div>
+<div class="container">
+<div class="top-nav">
+<div class="logo-container">
+<div class="logo-icon">
+<i class="fas fa-image"></i>
+</div>
+<div class="logo-text">SaveYTThumbnail</div>
+</div>
+<div class="nav-actions">
+<div class="theme-toggle" id="themeToggle">
+<i class="fas fa-moon"></i>
+</div>
+</div>
+</div>
+<header>
+<h1>YouTube Thumbnail Downloader</h1>
+<p class="tagline">Download high-quality thumbnails from any YouTube video instantly</p>
+</header>
+<div class="divider"></div>
+<main>
+<div class="input-card">
+<div class="input-group">
+<div class="input-wrapper">
+<input autofocus="" class="url-input" id="videoUrl" placeholder="Paste YouTube URL here..." type="text"/>
+<button class="paste-btn" id="pasteBtn" title="Paste from clipboard">
+<i class="fas fa-paste"></i>
+</button>
+</div>
+<button class="btn" id="getThumbnail">
+<i class="fas fa-download"></i>
+<span>Get Thumbnails</span>
+<div class="spinner" id="spinner"></div>
+</button>
+</div>
+</div>
+<!-- Ad Script Start -->
+<div style="display: flex; justify-content: center; margin: 20px 0;">
+<script type="text/javascript">
+        atOptions = {
+            'key' : 'ecd0ec575d24947ea65b744b46a94075',
+            'format' : 'iframe',
+            'height' : 250,
+            'width' : 300,
+            'params' : {}
+        };
+    </script>
+<script src="https://www.highperformanceformat.com/ecd0ec575d24947ea65b744b46a94075/invoke.js" type="text/javascript"></script>
+</div>
+<!-- Ad Script End -->
 
-        <header>
-            <h1>YouTube Thumbnail Downloader</h1>
-            <p class="tagline">Download high-quality thumbnails from any YouTube video instantly</p>
-        </header>
-
-        <div class="divider"></div>
-
-        <main>
-            <div class="input-card">
-                <div class="input-group">
-                    <div class="input-wrapper">
-                        <input type="text" class="url-input" id="videoUrl" placeholder="Paste YouTube URL here..." autofocus>
-                        <button class="paste-btn" id="pasteBtn" title="Paste from clipboard">
-                            <i class="fas fa-paste"></i>
-                        </button>
-                    </div>
-                    <button class="btn" id="getThumbnail">
-                        <i class="fas fa-download"></i> 
-                        <span>Get Thumbnails</span>
-                        <div class="spinner" id="spinner"></div>
+<section class="steps-section">
+<h2 class="steps-title">How to Download YouTube Thumbnails</h2>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-number">1</div>
+<h3 class="step-title">Copy YouTube URL</h3>
+<p class="step-description">Go to the YouTube video and copy the URL from your browser's address bar.</p>
+</div>
+<div class="step-card">
+<div class="step-number">2</div>
+<h3 class="step-title">Paste URL</h3>
+<p class="step-description">Paste the URL into the input field above and click "Get Thumbnails".</p>
+</div>
+<div class="step-card">
+<div class="step-number">3</div>
+<h3 class="step-title">Download</h3>
+<p class="step-description">Choose your preferred quality and click the download button to save the thumbnail.</p>
+</div>
+</div>
+</section>
+<section class="preview-section" id="previewSection">
+<h2 class="preview-title">Available Thumbnails</h2>
+<div class="thumbnails-grid" id="thumbnailsGrid">
+<!-- Thumbnails will be dynamically inserted here -->
+</div>
+<div class="no-thumbnail" id="noThumbnail" style="display: none;">
+<i class="fas fa-image"></i>
+<h3>No Thumbnails Found</h3>
+<p>We couldn't find any thumbnails for this video. Please check the URL and try again.</p>
+<button class="btn" onclick="document.getElementById('videoUrl').focus()">
+<i class="fas fa-redo"></i> Try Again
                     </button>
-                </div>
-            </div>
-
-            <section class="steps-section">
-                <h2 class="steps-title">How to Download YouTube Thumbnails</h2>
-                <div class="steps-grid">
-                    <div class="step-card">
-                        <div class="step-number">1</div>
-                        <h3 class="step-title">Copy YouTube URL</h3>
-                        <p class="step-description">Go to the YouTube video and copy the URL from your browser's address bar.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">2</div>
-                        <h3 class="step-title">Paste URL</h3>
-                        <p class="step-description">Paste the URL into the input field above and click "Get Thumbnails".</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">3</div>
-                        <h3 class="step-title">Download</h3>
-                        <p class="step-description">Choose your preferred quality and click the download button to save the thumbnail.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section class="preview-section" id="previewSection">
-                <h2 class="preview-title">Available Thumbnails</h2>
-                <div class="thumbnails-grid" id="thumbnailsGrid">
-                    <!-- Thumbnails will be dynamically inserted here -->
-                </div>
-                <div class="no-thumbnail" id="noThumbnail" style="display: none;">
-                    <i class="fas fa-image"></i>
-                    <h3>No Thumbnails Found</h3>
-                    <p>We couldn't find any thumbnails for this video. Please check the URL and try again.</p>
-                    <button class="btn" onclick="document.getElementById('videoUrl').focus()">
-                        <i class="fas fa-redo"></i> Try Again
-                    </button>
-                </div>
-            </section>
-        </main>
-
-        <footer>
-            <p>© <span id="currentYear"></span> SaveYTThumbnail.com - Free YouTube Thumbnail Downloader | Made with <span class="footer-heart">❤️</span></p>
-        </footer>
-    </div>
-
-    <script>
+</div>
+</section>
+</main>
+<footer>
+<p>© <span id="currentYear"></span> SaveYTThumbnail.com - Free YouTube Thumbnail Downloader | Made with <span class="footer-heart">❤️</span></p>
+</footer>
+</div>
+<script>
         // Set current year in footer
         document.getElementById('currentYear').textContent = new Date().getFullYear();
 
